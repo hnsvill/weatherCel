@@ -87,7 +87,6 @@ def selectRecords(dbName, dbPassword, dbPort, dbHost, tableName, columnNames, wh
 
 
 if __name__=='__main__':
-    # dbTableName = 'hereigoagaon'
     dbTableName = os.environ['POSTGRES_TABLE_NAME']
     databaseName = os.environ['POSTGRES_DATABASE_NAME']
     databasePassword = os.environ['POSTGRES_PASSWORD']
@@ -125,7 +124,5 @@ if __name__=='__main__':
     #     columnNames='*',
     #     whereClause='WHERE temperature>65'
     # )
-    for r in records:
-        print(r)
 
 

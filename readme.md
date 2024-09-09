@@ -106,7 +106,6 @@ Implement a Dockerized application in Python that tracks the variation in weathe
           {
             "lat": "39.7456",
             "lon": "-97.0892",
-            "wfoXY":"TOP/32,81",
             "date":"2024-09-10",
             "hour":10
           }
