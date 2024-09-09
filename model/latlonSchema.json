@@ -1,0 +1,21 @@
+{
+    "type": "object",
+    "properties": {
+        "lat": {
+            "type": "number",
+            "examples": [
+                39.7456
+            ],
+            "minimum": -90,
+            "maximum": 90
+        },
+        "lon": {
+            "type": "number",
+            "examples": [
+                -97.0892
+            ],
+            "minimum": -180,
+            "maximum": 180
+        }
+    }
+}

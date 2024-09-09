@@ -1,8 +1,9 @@
-import psycopg, dotenv, os
-
+import psycopg, dotenv, os, logging
 import psycopg.rows
 
 dotenv.load_dotenv('.env')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 # Extra hacked. I'd like to rewrite this for idempotency and single responsibility/abstracting the connection & cursor.
@@ -17,18 +18,15 @@ def createDatabaseIfNotExists(dbName, dbPassword, dbPort, dbHost):
             try:
                 cur.execute(sql_query)
             except Exception as e:
-                # Not necessary for this particular implementation but eventually I want to ad my own errors
-                # import re
-                # doesAlreadyExist = re.match('database "([a-zA-Z]*)" already exists', e)
-                # print(e, doesAlreadyExist)
-                print(e)
+                # TODO: Not necessary for this particular implementation but eventually I want to ad my own errors
+                    # import re
+                    # doesAlreadyExist = re.match('database "([a-zA-Z]*)" already exists', e)
+                    # print(e, doesAlreadyExist)
+                logger.error(e)
                 cur.close()
-                # conn.close()
-            else: # hmm, this is untested but was in the docs
+            else: # hmm, seems to work
                 # Revert autocommit settings
-                print(cur)
                 conn.autocommit = False
-                # conn.close()
 
 def createTableIfNotExists(dbName, dbPassword, dbPort, dbHost, tableName, schemaString):
     with psycopg.connect(f'dbname={dbName} user=postgres password={dbPassword} port={dbPort} host={dbHost}') as conn:
@@ -39,18 +37,17 @@ def createTableIfNotExists(dbName, dbPassword, dbPort, dbHost, tableName, schema
                 WHERE tablename = '{tableName}'
                 """)
             tables = cur.fetchall()
-            print(tables)
             if len(tables)<1:
                 print(f'we made it: {tables}')
-                print(f'creating table {tableName}')
+                logger.debug(f'creating table {tableName}')
                 cur.execute(f"""
                     CREATE TABLE {tableName}
                     {schemaString}
                     """)
                 conn.commit()
             else:
-                print(f'tables: {tables}')
-                print(f'table {tableName} already exists')
+                logger.debug(f'tables: {tables}')
+                logger.debug(f'table {tableName} already exists')
 
 
 def insertRows(dbName, dbPassword, dbPort, dbHost, tableName, columnNames, rows):
@@ -65,8 +62,8 @@ def insertRows(dbName, dbPassword, dbPort, dbHost, tableName, columnNames, rows)
                 )
                 conn.commit()
             except Exception as e:
-                print(e)
-                print(f'something went wrong when wrting to {dbName}.{tableName}.')
+                logger.error(e)
+                logger.error(f'something went wrong when wrting to {dbName}.{tableName}.')
 
 def selectRecords(dbName, dbPassword, dbPort, dbHost, tableName, columnNames, whereClause=''):
     with psycopg.connect(f'dbname={dbName} user=postgres password={dbPassword} port={dbPort} host={dbHost}') as conn:
@@ -77,18 +74,21 @@ def selectRecords(dbName, dbPassword, dbPort, dbHost, tableName, columnNames, wh
                     FROM {tableName}
                     {whereClause}
                     """
-                print(q)
+                print(f'query: {q}')
                 cur.execute(
                     q
                 )
-                return cur.fetchall()
+                records = cur.fetchall()
+                # print()
+                return records
             except Exception as e:
-                print(e)
-                print(f'something went wrong when reading from {dbName}.{tableName}.')
+                logger.error(e)
+                logger.error(f'something went wrong when reading from {dbName}.{tableName}.')
 
 
 if __name__=='__main__':
-    dbTableName = 'hereigoagaon'
+    # dbTableName = 'hereigoagaon'
+    dbTableName = os.environ['POSTGRES_TABLE_NAME']
     databaseName = os.environ['POSTGRES_DATABASE_NAME']
     databasePassword = os.environ['POSTGRES_PASSWORD']
     databasePort = os.environ['POSTGRES_PORT']
@@ -99,32 +99,32 @@ if __name__=='__main__':
         dbPort=databasePort,
         dbHost=databaseHost
     )
-    # createTableIfNotExists(
-    #     dbName=databaseName,
-    #     dbPassword=databasePassword,
-    #     dbPort=databasePort,
-    #     dbHost=databaseHost,
-    #     tableName=dbTableName,
-    #     schemaString='(temerature SMALLINT, tempUnit VARCHAR(2))'
-    # )
-    # insertRows(
-    #     dbName=databaseName,
-    #     dbPassword=databasePassword,
-    #     dbPort=databasePort,
-    #     dbHost=databaseHost,
-    #     tableName=dbTableName,
-    #     columnNames='(temerature, tempUnit)',
-    #     rows="(10, 'F')"
-    # )
-    records = selectRecords(
+    createTableIfNotExists(
         dbName=databaseName,
         dbPassword=databasePassword,
         dbPort=databasePort,
         dbHost=databaseHost,
         tableName=dbTableName,
-        columnNames='*',
-        whereClause='WHERE temperature>65'
+        schemaString='(temerature SMALLINT, tempUnit VARCHAR(2))'
     )
+    insertRows(
+        dbName=databaseName,
+        dbPassword=databasePassword,
+        dbPort=databasePort,
+        dbHost=databaseHost,
+        tableName=dbTableName,
+        columnNames='(temerature, tempUnit)',
+        rows="(10, 'F')"
+    )
+    # records = selectRecords(
+    #     dbName=databaseName,
+    #     dbPassword=databasePassword,
+    #     dbPort=databasePort,
+    #     dbHost=databaseHost,
+    #     tableName=dbTableName,
+    #     columnNames='*',
+    #     whereClause='WHERE temperature>65'
+    # )
     for r in records:
         print(r)
 

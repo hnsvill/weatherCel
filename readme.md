@@ -95,8 +95,20 @@ Implement a Dockerized application in Python that tracks the variation in weathe
             "hour":10,
             "high":90,
             "low":85,
-            "highPredictionTimestamp":90,
-            "highPredictionTimestamp":90
+            "highForecastretrievedtimestamp":1725997039,
+            "lowForecastretrievedtimestamp":1725910639
+          }
+        ]
+        ``` 
+      - Sample response body if there are no persisted results
+        ```json
+        [
+          {
+            "lat": "39.7456",
+            "lon": "-97.0892",
+            "wfoXY":"TOP/32,81",
+            "date":"2024-09-10",
+            "hour":10
           }
         ]
         ``` 
@@ -186,7 +198,7 @@ I do currently use camelCase because of recent js development. I can change. I d
 
 
 - ~~Preprocessing. I'd want to convert C into F when saving the forecasts~~
-- Types. Implement something like AJV for python for nicer data validation.
+- ~~Types. Implement something like AJV for python for nicer data validation.~~
 - ~~Retries. Something on the weather site said something about the API call sometimes not returning a 200 or returning null values but retrying fixes it. Only sorta crossed off.~~
 - Housekeeping
   - Precommit hook for running tests & linting

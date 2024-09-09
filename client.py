@@ -11,7 +11,6 @@ def _req(reqMethod,reqUrl,reqHeaders={},reqPayload={}):
 def reqRetriable(reqMethod,reqUrl,reqHeaders={},reqPayload={},retries=2,request=_req):
     logging.debug(f'calling {reqUrl}.. retries remaining: {retries}')
     response = _req(reqMethod,reqUrl,reqHeaders,reqPayload)
-    # print(response)
     if response.status_code == 200:
         return response
     elif retries >= 0:

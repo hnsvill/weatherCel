@@ -18,8 +18,7 @@ weatherPostgresTypeMapping = {
 }
 
 def handler(event, context):
-    dbTableName = 'hereigoagaonagainn'
-
+    dbTableName = os.environ['POSTGRES_TABLE_NAME']
     databaseName = os.environ['POSTGRES_DATABASE_NAME']
     databasePassword = os.environ['POSTGRES_PASSWORD']
     databasePort = os.environ['POSTGRES_PORT']
@@ -61,6 +60,4 @@ def handler(event, context):
         logger.error(f'issue persisting forecast')
     
 
-if __name__=='__main__':
-    print('hi there')
-    handler({},{})
+# if __name__=='__main__':
