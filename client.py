@@ -1,10 +1,7 @@
-import datetime, requests, dotenv, os, logging
+import requests, logging
 
-dotenv.load_dotenv('.env')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-
-
 
 # It's tempting to use a lambda because I like JS' arrow functions but I haven't settled on what I like for python
 def _req(reqMethod,reqUrl,reqHeaders={},reqPayload={}):

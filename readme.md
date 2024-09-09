@@ -50,14 +50,6 @@ Implement a Dockerized application in Python that tracks the variation in weathe
 ```
 2. At a configurable interval, defaulting to 60 minutes, the application must query the API described at https://www.weather.gov/documentation/services-web-api to retrieve forecast data for the specified latitude and longitude
 3. The forecasts for the next 72 hours are persisted in a postgres database from the postgres docker image.
-4. The application must expose an API or endpoint that accepts as inputs: a latitude, longitude, date, and UTC hour of day (0-23)
-5. The API or endpoint must return the highest and lowest recorded forecast in the database for the specified location, day and hour of day
-6. The application must contain an appropriate Dockerfile and other resources to containerize the application
-7. The application must include a README with instructions for building the Docker container and running the application
-8. Clearly state all of the assumptions you made in completing the application
-
-
-</br>
 
 | Field Name                   | Type        | Description                                       | Sample     |
 |------------------------------|-------------|---------------------------------------------------|------------|
@@ -74,6 +66,50 @@ Implement a Dockerized application in Python that tracks the variation in weathe
 
 
 *Postgres' POINT was a headache to pass through `psycopg`
+
+
+4. The application must expose an API or endpoint that accepts as inputs: a latitude, longitude, date, and UTC hour of day (0-23)
+    - I started by reaching for whatever datetime gave me but making sure the recorded and returned times/UTC hour is correct would be a huge asterisk during product acceptance.
+    - POST:/forecastPoints
+      - Sample request body
+        ```json
+        [
+          {
+            "lat": "39.7456",
+            "lon": "-97.0892",
+            "date":"2024-09-10",
+            "hour":10
+          }
+        ]
+        ```
+5. The API or endpoint must return the highest and lowest recorded forecast in the database for the specified location, day and hour of day
+    - POST:/forecastPoints
+      - Sample response body
+        ```json
+        [
+          {
+            "lat": "39.7456",
+            "lon": "-97.0892",
+            "wfoXY":"TOP/32,81",
+            "date":"2024-09-10",
+            "hour":10,
+            "high":90,
+            "low":85,
+            "highPredictionTimestamp":90,
+            "highPredictionTimestamp":90
+          }
+        ]
+        ``` 
+6. The application must contain an appropriate Dockerfile and other resources to containerize the application. 🐳 Please see [development](https://github.com/hnsvill/weatherCel?tab=readme-ov-file#development) 💙
+7. The application must include a README with instructions for building the Docker container and running the application. ✨
+8. Clearly state all of the assumptions you made in completing the application
+    - I definitely went broad and not deep. In this context I biased for hacking more features together to the point of working rather than fully refining any one feature before moving on. Working like this:
+        - Makes stakeholder discussions more productive by turning unknown unknowns into known unknowns.
+        - Exposes assumptions I wouldn't think to call out so when I go to refine something, the right stuff is what's refined.
+
+
+</br>
+
 
 ## Development
 
@@ -101,7 +137,7 @@ Run the container
 docker run --platform linux/amd64 -p 9000:8080 persistforcast:latest
 ```
 
-The cron job runs the `invokePersistForecast` script which invokes the lambda every hour with a cURL request. See ["(Optional) Test the image locally"]((https://docs.aws.amazon.com/lambda/latest/dg/python-image.html#python-image-instructions))
+The cron job runs the [invokePersistForecast script]() which invokes the lambda every hour with a cURL request. See ["(Optional) Test the image locally"]((https://docs.aws.amazon.com/lambda/latest/dg/python-image.html#python-image-instructions))
 
 ---
 
@@ -141,17 +177,12 @@ aws lambda list-functions | jq ".Functions" | jq ".[] | select(.FunctionName==\"
 aws lambda invoke --function-name persistForecast --cli-binary-format raw-in-base64-out --payload '{ "key":"value" }' responses.json
 ```
 
-https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function
-
-
-
-
 Just in case something seems fishy: https://alexwlchan.net/2023/fish-venv/
 
 I do currently use camelCase because of recent js development. I can change. I do like camelCase because of the reduced length and ease of typing though.
 
 
-### Waterfalls I ~~did not~~ ^[sort of tried not to] chase (potential next steps)
+### Waterfalls I ~~did not~~ ^[sort of tried not to] chase
 
 
 - ~~Preprocessing. I'd want to convert C into F when saving the forecasts~~
@@ -161,7 +192,7 @@ I do currently use camelCase because of recent js development. I can change. I d
   - Precommit hook for running tests & linting
   - ~~Linting with settings - PEP8's line length is too short and enforcing it at that length makes it _less_ readable 🫣~~
   - Pipeline for testing/building on new branches, +deploy on certain branches
-- Telemetry - OpenTelemetry + Prometheus looked good but tbh and app this size and a bit bigger imo could be covered with Lambda's included telemetry depending on priorities.
+- Telemetry - OpenTelemetry + Prometheus looked good but tbh an app this size and a bit bigger imo could be covered with Lambda's included telemetry depending on priorities.
 - Tests are NOT a waterfall item but I made choices based on the time constraints. This was a lot like eating ice cream for dinner.
 - More sophisticated logging that can be passed down the stack instead of repeating myself.
 - Separate the endpoint and persisting the forecast into two images. It saved some time to use one container instead of composing.
