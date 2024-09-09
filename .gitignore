@@ -11,3 +11,7 @@ terraform/app/terraform.tfstate
 terraform/prerequisiteInfrastructure/.terraform.lock.hcl
 terraform/prerequisiteInfrastructure/.terraform/
 terraform/prerequisiteInfrastructure/terraform.tfstate
+
+.DS_Store
+
+*zzLocalDevelopment*
