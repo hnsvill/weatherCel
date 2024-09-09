@@ -45,6 +45,6 @@ def forecast(lat,lon):
         logger.error('weatherGovClient: we have a problem')
 
 # if __name__=='__main__':
-#     dataloaded = _forecastPeriodsFiltered(json.load(open('weatherGovResponse.json', 'r'))['properties']['periods'])
-#     dataloaded = forecast(39.7456,-97.0892)
+#     dataloaded = _forecastPeriodsFiltered(json.load(open('sampleData/weatherGovResponse.json', 'r'))['properties']['periods'])
+#     # dataloaded = forecast(39.7456,-97.0892)
 #     print(dataloaded)
