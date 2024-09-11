@@ -17,7 +17,7 @@ weatherPostgresTypeMapping = {
     'lon': 'VARCHAR(20)'
 }
 
-def handler(event, context):
+def handler(event = {}, context = {}):
     dbTableName = os.environ['POSTGRES_TABLE_NAME']
     databaseName = os.environ['POSTGRES_DATABASE_NAME']
     databasePassword = os.environ['POSTGRES_PASSWORD']
@@ -32,6 +32,7 @@ def handler(event, context):
         weatherPostgresTypeMappingSchemaString = f'({', '.join([f'{k} {v}' for k,v in weatherPostgresTypeMapping.items()])})'
     except Exception as e:
         logger.error(f'issue fetching forecast')
+    print('success calling weather.gov api')
     try:
         postgresClient.createDatabaseIfNotExists(
                 dbName=databaseName,
@@ -60,4 +61,5 @@ def handler(event, context):
         logger.error(f'issue persisting forecast')
     
 
-# if __name__=='__main__':
+if __name__=='__main__':
+    handler()

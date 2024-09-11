@@ -22,7 +22,6 @@ def handler(event, context={}):
     except Exception as e:
         return {'message':e}
 
-    # dbTableName = os.environ['POSTGRES_TABLE_NAME']
     dbTableName = os.environ['POSTGRES_TABLE_NAME']
     databaseName = os.environ['POSTGRES_DATABASE_NAME']
     databasePassword = os.environ['POSTGRES_PASSWORD']

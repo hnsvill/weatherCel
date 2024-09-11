@@ -1,4 +1,3 @@
 pyproject.toml
-.env
 *.json
 .venv/
