@@ -19,7 +19,7 @@ weatherPostgresTypeMapping = {
 
 def handler(event = {}, context = {}):
     dbTableName = os.environ['POSTGRES_TABLE_NAME']
-    databaseName = os.environ['POSTGRES_DB']
+    databaseName = os.environ['POSTGRES_DATABASE_NAME']
     databasePassword = os.environ['POSTGRES_PASSWORD']
     databasePort = os.environ['POSTGRES_PORT']
     databaseHost = os.environ['POSTGRES_HOST']
@@ -61,7 +61,7 @@ def handler(event = {}, context = {}):
             )
         return {'message':f'Successfully persisted forecast periods for {monitoredCoordinatePair}'}
     except Exception as e:
-        logger.error(f'issue persisting forecast')
+        logger.error(f'Error persisting forecast: {e}')
         return {'message':f'Error persisting forecast: {e}'}
     
 

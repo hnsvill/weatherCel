@@ -23,7 +23,7 @@ def handler(event, context={}):
         return {'message':e}
 
     dbTableName = os.environ['POSTGRES_TABLE_NAME']
-    databaseName = os.environ['POSTGRES_DB']
+    databaseName = os.environ['POSTGRES_DATABASE_NAME']
     databasePassword = os.environ['POSTGRES_PASSWORD']
     databasePort = os.environ['POSTGRES_PORT']
     databaseHost = os.environ['POSTGRES_HOST']
