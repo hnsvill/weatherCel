@@ -88,7 +88,7 @@ def selectRecords(dbName, dbPassword, dbPort, dbHost, tableName, columnNames, wh
 
 if __name__=='__main__':
     dbTableName = os.environ['POSTGRES_TABLE_NAME']
-    databaseName = os.environ['POSTGRES_DATABASE_NAME']
+    databaseName = os.environ['POSTGRES_DB']
     databasePassword = os.environ['POSTGRES_PASSWORD']
     databasePort = os.environ['POSTGRES_PORT']
     databaseHost = os.environ['POSTGRES_HOST']

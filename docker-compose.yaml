@@ -1,14 +1,21 @@
 version: '3'
 
 services:
-  lambda:
-    # build: ./lambda
-    # command: python persistForecast.py
-    # environment:
-    image: persistforecast
+  persist:
+    build:
+      dockerfile: ./DockerfilePersist
     env_file: ".env"
     ports:
       - "9000:8080"
+      # - "db:5432"
+  
+  # serve:
+  #   build:
+  #     dockerfile:  ./DockerfileService
+  #   env_file: ".env"
+  #   ports:
+  #     - "9001:8080"
+  #     # - "5432:5432"
 
   db:
     image: postgres
