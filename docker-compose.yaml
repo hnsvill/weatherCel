@@ -17,7 +17,7 @@ services:
     environment:
       POSTGRES_HOST: db
     ports:
-      - "9001:80"
+      - "9001:8080"
 
   db:
     image: postgres
