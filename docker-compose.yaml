@@ -1,0 +1,29 @@
+services:
+  persist:
+    build:
+      dockerfile: ./DockerfilePersist
+    platform: linux/amd64
+    env_file: ".env"
+    environment:
+      POSTGRES_HOST: db
+    ports:
+      - "9000:8080"
+  
+  service:
+    build:
+      dockerfile:  ./DockerfileService
+    platform: linux/amd64
+    env_file: ".env"
+    environment:
+      POSTGRES_HOST: db
+    ports:
+      - "9001:80"
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: cel
+    # ports:
+    #   - "5432:5432"
