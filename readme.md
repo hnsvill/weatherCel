@@ -29,15 +29,6 @@ Implement a Dockerized application in Python that tracks the variation in weathe
 
 # Solution
 
-<details>
-  <summary>If you'd like a "pencils down at 2-4h" please visit <a target="_blank" href="https://github.com/hnsvill/weatherCel/commit/886af8399c58d85fe3954e026e19329fd52caec1">this commit.</a></summary>
-  Time is approximate because I chipped away at it here and there. I kept going because
-  <ol>
-    <li>I want to impress you and</li>
-    <li>my outside-of-employed-at-company "cookbook" is thin ^[nonexistent ¯\_(ツ)_/¯] anyway. That first commit doesn't meet all the requirements but I'm <s>assuming</s> ^[hopeful] you were looking to see where I go when there's not enough time to do everything.</li>
-  </ol>
-</details>
-
 ## Requirements: 
 1. Configurable location for which to track weather forecasts. I like lists for this kind of thing because it's traversable. Plus the JSON object can hold human-readable fields the app can discard.
 ```json
@@ -116,7 +107,7 @@ Implement a Dockerized application in Python that tracks the variation in weathe
 8. Clearly state all of the assumptions you made in completing the application
     - I definitely went broad and not deep. In this context I biased for hacking more features together to the point of working rather than fully refining any one feature before moving on. Working like this:
         - Makes stakeholder discussions more productive by turning unknown unknowns into known unknowns.
-        - Exposes assumptions I wouldn't think to call out so when I go to refine something, the right stuff is what's refined.
+        - Exposes assumptions I wouldn't think to call out so when I go to refine something, the right stuff is what's refined. **Because it's gonna get refined!**
 
 
 </br>
@@ -204,7 +195,7 @@ I do currently use camelCase because of recent js development. I can change. I d
   - ~~Linting with settings - PEP8's line length is too short and enforcing it at that length makes it _less_ readable 🫣~~
   - Pipeline for testing/building on new branches, +deploy on certain branches
 - Telemetry - OpenTelemetry + Prometheus looked good but tbh an app this size and a bit bigger imo could be covered with Lambda's included telemetry depending on priorities.
-- Tests are NOT a waterfall item but I made choices based on the time constraints. This was a lot like eating ice cream for dinner.
+- ~~Tests are NOT a waterfall item but I made choices based on the time constraints. This was a lot like eating ice cream for dinner.~~ Tests not everywhere yet but I ate a vegetable with the validator tests
 - More sophisticated logging that can be passed down the stack instead of repeating myself.
 - Separate the endpoint and persisting the forecast into two images. It saved some time to use one container instead of composing.
 - Error handling. I like to wrap the main function for every module in a try catch or equivalent for the language. If something goes wrong, throw an error to stop computing on a request that would fail anyway and reduce the need for other error handling in more places. Then I can throw custom errors that I can handle however I want at the next level(s)

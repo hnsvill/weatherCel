@@ -1,9 +1,10 @@
 {
+    "$id":"validatorTestArrayOfStrings",
     "type": "array",
     "items": {
         "allOf": [
             {
-                "$ref":"trying"
+                "$ref":"validatorTestString"
             }
         ]
     },
